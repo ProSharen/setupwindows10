@@ -1,4 +1,4 @@
-﻿<div align="center">
+﻿<div align="left">
   <h1>Windows 10 Setup Script</h1>
 
 Modified version by SoftwareRat (2004 ONLY)!

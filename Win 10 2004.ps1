@@ -3472,7 +3472,7 @@ if ($Error)
 }
 
 # Download important software
-Write-Output "Downloading Microsoft Edge, DirectX June 2010 Redist, VLC media Player and NVIDIA GeForce NOW."
+Write-Output "Downloading Microsoft Edge, DirectX June 2010 Redist, VLC media Player, NVIDIA GeForce NOW and Microsoft Office."
 Write-Host "Downloading DirectX" -NoNewline
 (New-Object System.Net.WebClient).DownloadFile("https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe", "$env:LOCALAPPDATA\Temp\directx_Jun2010_redist.exe") 
 Write-host "`r - Success!"
@@ -3488,6 +3488,9 @@ Write-host "`r - Success!"
 Write-Host "Downloading VLC media player" -NoNewline
 (New-Object System.Net.WebClient).DownloadFile("https://ftp.fau.de/videolan/vlc/3.0.11/win64/vlc-3.0.11-win64.exe", "$env:LOCALAPPDATA\Temp\vlc-3.0.11-win64.exe")
 Write-host "`r - Success!"
+Write-Host "Downloading Microsoft Office" -NoNewline
+(New-Object System.Net.WebClient).DownloadFile("https://tb.rg-adguard.net/dl.php?go=84abf491", "$env:LOCALAPPDATA\Temp\O365ProPlusRetail.img")
+Write-host "`r - Success!"
 
 # Install important software
 Write-Output "Installing Microsoft Edge, .Net 3.5, Direct Play, DirectX Redist 2010, VLC media Player and NVIDIA GeForce NOW"
@@ -3496,6 +3499,13 @@ Start-Process -FilePath "$env:LOCALAPPDATA\Temp\directx_Jun2010_redist.exe" -Arg
 Start-Process -FilePath "$env:LOCALAPPDATA\Temp\DirectX\DXSETUP.EXE" -ArgumentList '/silent' -wait
 Start-Process -FilePath "$env:LOCALAPPDATA\Temp\GeForceNOW-release.exe" -ArgumentList '/S /skipGFNLaunch' -wait
 Start-Process -FilePath "$env:LOCALAPPDATA\Temp\vlc-3.0.11-win64.exe" -ArgumentList '/language=de_DE /S' -wait
-Start-Process -FilePath "$env:LOCALAPPDATA\Temp\parsec-windows.exe" -ArgumentList '/S /NoLaunchAfterStart'
+Start-Process -FilePath "$env:LOCALAPPDATA\Temp\parsec-windows.exe" -ArgumentList '/S'
 Install-WindowsFeature Direct-Play | Out-Null
 Install-WindowsFeature Net-Framework-Core | Out-Null
+$beforeMount = (Get-Volume).DriveLetter
+$imagePath = '$env:LOCALAPPDATA\Temp\O365ProPlusRetail.img'
+$mountResult = Mount-DiskImage $imagePath
+$afterMount = (Get-Volume).DriveLetter
+$setuppath = "$(($afterMount -join '').replace(($beforeMount -join ''), '')):\"
+Start-Process setup.exe
+exit
